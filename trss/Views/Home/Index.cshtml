@@ -1,0 +1,60 @@
+﻿@model System.Collections.Generic.IEnumerable<trss.Models.TorrentViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
+<h3>T-RSS list</h3>
+
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("Id");
+    @Html.Hidden("Title");
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Title</td>
+                <td>Age</td>
+                <td>Seed</td>
+                <td>Leech</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!m.Downloaded)
+                        {
+                            <a href="#" class="btn btn-primary dw-button" data-id="@Html.Encode(m.Torrent.Id)" data-title="@Html.Encode(m.Torrent.Title)">Download</a>
+                        }
+                    </td>
+                    <td>
+                        <span title="@Html.Encode(m.Torrent.Description)">@Html.Encode(m.Torrent.Title)</span>
+                    </td>
+                    <td>@Html.Encode(m.Age)</td>
+                    <td>@Html.Encode(m.Torrent.Seeders)</td>
+                    <td>@Html.Encode(m.Torrent.Leechers)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+
+            $(".dw-button").click(function() {
+                var id = $(this).attr("data-id");
+                var title = $(this).attr("data-title");
+                $("#Title").val(title);
+                $("#Id").val(id);
+                $(this).parents("form").submit();
+            });
+
+        });
+    </script>
+}
