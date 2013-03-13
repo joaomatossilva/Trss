@@ -33,7 +33,7 @@ namespace trss.Infrastructure.Sources
             var torrent = new Torrent();
             torrent.Id = item.Element("hash") != null ? item.Element("hash").Value : "";
             torrent.Title = item.Element("title") != null ? item.Element("title").Value : "";
-            torrent.Description = item.Element("description") != null ? item.Element("description").Value : "";
+            torrent.Description = item.Element("{http://tempuri.org}encoded") != null ? item.Element("{http://tempuri.org}encoded").Value : "";
             torrent.Seeders = item.Element("seeds") != null ? int.Parse(item.Element("seeds").Value) : 0;
             torrent.Leechers = item.Element("leechs") != null ? int.Parse(item.Element("leechs").Value) : 0;
             torrent.Size = item.Element("size") != null ? long.Parse(item.Element("size").Value) : 0;
