@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace trss.Infrastructure.Sources
@@ -16,8 +17,15 @@ namespace trss.Infrastructure.Sources
         {
             var request = HttpWebRequest.Create(FeedUrl);
             ((HttpWebRequest)request).AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate);
-            var stream = XDocument.Load(new StreamReader(request.GetResponse().GetResponseStream()));
-            return stream.Descendants("channel").Descendants("item").Select(BuildTorrentFromRssItem);
+
+            var mgr = new XmlNamespaceManager(new NameTable());
+            mgr.AddNamespace("content", "http://tempuri.org");
+            var ctx = new XmlParserContext(null, mgr, null, XmlSpace.Default);
+            using (var reader = XmlReader.Create(request.GetResponse().GetResponseStream(), null, ctx))
+            {
+                var document = XDocument.Load(reader);
+                return document.Descendants("channel").Descendants("item").Select(BuildTorrentFromRssItem);
+            }
         }
 
         private Torrent BuildTorrentFromRssItem(XElement item)
