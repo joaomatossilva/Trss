@@ -45,7 +45,7 @@ namespace trss.Controllers
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
             return View(model);
         }
-        */
+        
         //
         // POST: /Account/LogOff
 
@@ -54,6 +54,18 @@ namespace trss.Controllers
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
+
+            return RedirectToAction("Index", "Home");
+        }
+        */
+
+        //
+        // POST: /Account/LogOff
+
+        [HttpGet]
+        public ActionResult LogOff()
+        {
+            FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
@@ -314,7 +326,7 @@ namespace trss.Controllers
         {
             return View();
         }
-
+        */
         [AllowAnonymous]
         [ChildActionOnly]
         public ActionResult ExternalLoginsList(string returnUrl)
@@ -322,7 +334,7 @@ namespace trss.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return PartialView("_ExternalLoginsListPartial", OAuthWebSecurity.RegisteredClientData);
         }
-
+        /*
         [ChildActionOnly]
         public ActionResult RemoveExternalLogins()
         {

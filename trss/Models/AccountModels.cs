@@ -1,8 +1,8 @@
-﻿/*
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
 using System.Web.Mvc;
@@ -10,6 +10,7 @@ using System.Web.Security;
 
 namespace trss.Models
 {
+    /*
     public class UsersContext : DbContext
     {
         public UsersContext()
@@ -56,7 +57,7 @@ namespace trss.Models
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-
+    */
     public class LoginModel
     {
         [Required]
@@ -71,7 +72,7 @@ namespace trss.Models
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }
-
+    /*
     public class RegisterModel
     {
         [Required]
@@ -89,7 +90,7 @@ namespace trss.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-
+    */
     public class ExternalLogin
     {
         public string Provider { get; set; }
@@ -97,4 +98,3 @@ namespace trss.Models
         public string ProviderUserId { get; set; }
     }
 }
-*/
