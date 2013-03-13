@@ -32,6 +32,10 @@
                     </td>
                     <td>
                         <span title="@Html.Encode(m.Torrent.Description)">@Html.Encode(m.Torrent.Title)</span>
+                        @if (m.IsNew)
+                        {
+                            <span class="label label-info">New</span>
+                        }
                     </td>
                     <td>@Html.Encode(m.Age)</td>
                     <td>@Html.Encode(m.Torrent.Seeders)</td>

@@ -10,6 +10,7 @@ namespace trss.Models
     {
         public Torrent Torrent { get; set; }
         public string Age { get; set; }
+        public bool IsNew { get { return DateTime.Today.Subtract(Torrent.PubDate).Days < 7; }}
         public bool Downloaded { get; set; }
     }
 }
