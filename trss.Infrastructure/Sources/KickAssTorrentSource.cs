@@ -24,8 +24,36 @@ namespace trss.Infrastructure.Sources
             using (var reader = XmlReader.Create(request.GetResponse().GetResponseStream(), null, ctx))
             {
                 var document = XDocument.Load(reader);
-                return document.Descendants("channel").Descendants("item").Select(BuildTorrentFromRssItem);
+                return document.Descendants("channel").Descendants("item")
+                    .Select(BuildTorrentFromRssItem)
+                    .Where(t => FilterTorrent(t.Title));
             }
+        }
+
+        private bool FilterTorrent(string title)
+        {
+            
+            if (title.IndexOf("dvdrip", 0, StringComparison.InvariantCultureIgnoreCase) > -1)
+            {
+                return true;
+            }
+            if (title.IndexOf("brrip", 0, StringComparison.InvariantCultureIgnoreCase) > -1)
+            {
+                return true;
+            }
+            if (title.IndexOf("720p", 0, StringComparison.InvariantCultureIgnoreCase) > -1)
+            {
+                return true;
+            }
+            if (title.IndexOf("1080p", 0, StringComparison.InvariantCultureIgnoreCase) > -1)
+            {
+                return true;
+            }
+            if (title.IndexOf("DVDSCR", 0, StringComparison.InvariantCultureIgnoreCase) > -1)
+            {
+                return true;
+            }
+            return false;
         }
 
         private Torrent BuildTorrentFromRssItem(XElement item)
