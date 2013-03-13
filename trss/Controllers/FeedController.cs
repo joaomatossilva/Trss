@@ -10,6 +10,7 @@ using trss.Results;
 
 namespace trss.Controllers
 {
+    [AllowAnonymous]
     public class FeedController : RavenDbController
     {
         //
