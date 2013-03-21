@@ -11,7 +11,7 @@ namespace trss.Infrastructure.Sources
 {
     public class KickAssTorrentSource : ITorrentSource
     {
-        private const string FeedUrl = @"http://kat.ph/movies/?rss=1&field=seeders&sorder=desc";
+        private const string FeedUrl = @"http://kat.ph/movies/?rss=1&field=leechers&sorder=desc";
 
         public IEnumerable<Torrent> GetTorrents()
         {
@@ -19,7 +19,7 @@ namespace trss.Infrastructure.Sources
             ((HttpWebRequest)request).AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate);
 
             var mgr = new XmlNamespaceManager(new NameTable());
-            mgr.AddNamespace("content", "http://tempuri.org");
+            mgr.AddNamespace("aaa", "http://tempuri.org");
             var ctx = new XmlParserContext(null, mgr, null, XmlSpace.Default);
             using (var reader = XmlReader.Create(request.GetResponse().GetResponseStream(), null, ctx))
             {
@@ -59,12 +59,12 @@ namespace trss.Infrastructure.Sources
         private Torrent BuildTorrentFromRssItem(XElement item)
         {
             var torrent = new Torrent();
-            torrent.Id = item.Element("hash") != null ? item.Element("hash").Value : "";
+            torrent.Id = item.Element("{http://xmlns.ezrss.it/0.1/}infoHash") != null ? item.Element("{http://xmlns.ezrss.it/0.1/}infoHash").Value : "";
             torrent.Title = item.Element("title") != null ? item.Element("title").Value : "";
-            torrent.Description = item.Element("{http://tempuri.org}encoded") != null ? item.Element("{http://tempuri.org}encoded").Value : "";
-            torrent.Seeders = item.Element("seeds") != null ? int.Parse(item.Element("seeds").Value) : 0;
-            torrent.Leechers = item.Element("leechs") != null ? int.Parse(item.Element("leechs").Value) : 0;
-            torrent.Size = item.Element("size") != null ? long.Parse(item.Element("size").Value) : 0;
+            torrent.Description = item.Element("description") != null ? item.Element("description").Value : "";
+            torrent.Seeders = item.Element("{http://xmlns.ezrss.it/0.1/}seeds") != null ? int.Parse(item.Element("{http://xmlns.ezrss.it/0.1/}seeds").Value) : 0;
+            torrent.Leechers = item.Element("{http://xmlns.ezrss.it/0.1/}peers") != null ? int.Parse(item.Element("{http://xmlns.ezrss.it/0.1/}peers").Value) : 0;
+            torrent.Size = item.Element("{http://xmlns.ezrss.it/0.1/}contentLength") != null ? long.Parse(item.Element("{http://xmlns.ezrss.it/0.1/}contentLength").Value) : 0;
             torrent.PubDate = item.Element("pubDate") != null ? DateTime.Parse(item.Element("pubDate").Value) : DateTime.MinValue;
             return torrent;
         }
