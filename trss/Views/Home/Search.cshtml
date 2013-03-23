@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Search";
+}
+<h3>T-RSS search</h3>
+
+
+<form class="form-search">
+  <div class="input-append">
+    <input type="text" class="span2 search-query .input-large" data-bind="value: searchTerm">
+    <button type="submit" class="btn" data-bind="click: startSearching">Search</button>
+  </div>
+</form>
+
+<div data-bind="visible: isSearching">
+    Loading...
+</div>
+
+<div data-bind="visible: showResults() && !isSearching()">
+    <table class="table">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Title</td>
+                <td>Age</td>
+                <td>Seed</td>
+                <td>Leech</td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: searchResults">
+                <tr>
+                    <td>
+                        <a href="#" class="btn btn-primary dw-button" data-bind="visible: !Downloaded(), click: $parent.downloadTorrent">Download</a>
+                    </td>
+                    <td>
+                        <span data-bind="text: Torrent.Title, attr: { title: Torrent.Description}"></span>
+                        <span class="label label-info" data-bind="visible: IsNew">New</span>
+                    </td>
+                    <td><span data-bind="text: Age"></span></td>
+                    <td><span data-bind="text: Torrent.Seeders"></span></td>
+                    <td><span data-bind="text: Torrent.Leechers"></span></td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            var viewModel = new SearchViewModel();
+            ko.applyBindings(viewModel);
+        });
+
+
+        function SearchViewModel() {
+            var self = this;
+
+            self.searchTerm = ko.observable();
+            self.isSearching = ko.observable();
+            self.showResults = ko.observable(false);
+            self.searchResults = ko.observableArray(null);
+
+            self.showNoResults = ko.computed(function() {
+                return self.showResults() && self.searchResults() != null && self.searchResults().length > 0;
+            });
+
+            self.startSearching = function() {
+                self.isSearching(true);
+                self.searchResults(null);
+                $.ajax({
+                    url: '@Url.Action("SearchMovie")?searchTerm=' + encodeURI(self.searchTerm())
+                }).done(function (data) {
+                    self.showResults(true);
+                    self.isSearching(false);
+                    ko.mapping.fromJS(data, {}, self.searchResults);
+                });
+            };
+
+            self.downloadTorrent = function (item) {
+                console.log(item);
+                console.log(item.Torrent);
+                console.log(item.Torrent.Id());
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Index")',
+                    data: {
+                        id: item.Torrent.Id(),
+                        title: item.Torrent.Title()
+                    }
+                }).done(function() {
+                    item.Downloaded(true);
+                });
+            };
+        }
+    </script>
+}
