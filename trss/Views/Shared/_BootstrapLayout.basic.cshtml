@@ -24,7 +24,12 @@
                     <a class="brand" href="#" title="Torrent movies Rss">TRss</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            @Html.Navigation()
+                            <li>
+                                @Html.ActionLink("Top Downloads", "Index", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("Search", "Search", "Home")
+                            </li>
                         </ul>
                     </div>
                     @if (User.Identity.IsAuthenticated)
