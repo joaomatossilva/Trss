@@ -11,24 +11,29 @@ namespace trss.Infrastructure.Sources
 {
     public class KickAssTorrentSource : ITorrentSource
     {
-        private const string FeedUrl = @"http://kat.ph/movies/?rss=1&field=leechers&sorder=desc";
+        private const string FeedUrl = @"http://kat.ph/movies/";
+        private const string FeedSufix = @"?rss=1&field=seeders&sorder=desc";
 
         public IEnumerable<Torrent> GetTorrents()
         {
-            var request = HttpWebRequest.Create(FeedUrl);
+            var firstPage = ParseUrl(FeedUrl + FeedSufix);
+            var secondPage = ParseUrl(FeedUrl + "2/" + FeedSufix);
+            return firstPage.Union(secondPage).ToList();
+        }
+
+        private IEnumerable<Torrent> ParseUrl(string url)
+        {
+            var request = HttpWebRequest.Create(url);
             ((HttpWebRequest)request).AutomaticDecompression = (DecompressionMethods.GZip | DecompressionMethods.Deflate);
 
-            var mgr = new XmlNamespaceManager(new NameTable());
-            mgr.AddNamespace("aaa", "http://tempuri.org");
-            var ctx = new XmlParserContext(null, mgr, null, XmlSpace.Default);
-            using (var reader = XmlReader.Create(request.GetResponse().GetResponseStream(), null, ctx))
+            using (var reader = XmlReader.Create(request.GetResponse().GetResponseStream()))
             {
                 var document = XDocument.Load(reader);
                 return document.Descendants("channel").Descendants("item")
                     .Select(BuildTorrentFromRssItem)
                     .Where(t => FilterTorrent(t.Title));
             }
-        }
+        } 
 
         private bool FilterTorrent(string title)
         {
