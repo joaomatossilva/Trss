@@ -11,6 +11,7 @@ namespace trss.Infrastructure.Sources
 {
     public class KickAssTorrentSource : ITorrentSource
     {
+        private const string SearchUrl = @"http://kat.ph/usearch/{0}%20category:movies/?rss=1";
         private const string FeedUrl = @"http://kat.ph/movies/";
         private const string FeedSufix = @"?rss=1&field=seeders&sorder=desc";
 
@@ -19,6 +20,11 @@ namespace trss.Infrastructure.Sources
             var firstPage = ParseUrl(FeedUrl + FeedSufix);
             var secondPage = ParseUrl(FeedUrl + "2/" + FeedSufix);
             return firstPage.Union(secondPage).ToList();
+        }
+
+        public IEnumerable<Torrent> SearchTorrents(string searchTerm)
+        {
+            return ParseUrl(string.Format(SearchUrl, searchTerm));
         }
 
         private IEnumerable<Torrent> ParseUrl(string url)

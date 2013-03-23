@@ -8,5 +8,6 @@ namespace trss.Infrastructure
     public interface ITorrentSource
     {
         IEnumerable<Torrent> GetTorrents();
+        IEnumerable<Torrent> SearchTorrents(string searchTerm);
     }
 }
