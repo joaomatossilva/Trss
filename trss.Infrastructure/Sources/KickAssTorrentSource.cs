@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -37,7 +38,7 @@ namespace trss.Infrastructure.Sources
                 var document = XDocument.Load(reader);
                 return document.Descendants("channel").Descendants("item")
                     .Select(BuildTorrentFromRssItem)
-                    .Where(t => FilterTorrent(t.Title));
+                    .Where(t => FilterTorrent(t.Release));
             }
         } 
 
@@ -67,11 +68,30 @@ namespace trss.Infrastructure.Sources
             return false;
         }
 
+        private string GuessMovieName(string title)
+        {
+            //Regex titleRegEx = new Regex("(?<movieName>.+)[/(/[]?(?<year>[19/d/d|20/d/d])?");
+            Regex titleRegEx = new Regex(@"(?<movieName>.*)[\(\[\s\.]+(?<year>20[0-9]{2})");
+            Match match = titleRegEx.Match(title);
+            if (match.Success)
+            {
+                
+                var returnTitle = match.Groups["movieName"].Value;
+                if (match.Groups["year"].Success)
+                {
+                    returnTitle += " - " + match.Groups["year"].Value;
+                }
+                return returnTitle;
+            }
+            return title;
+        }
+
         private Torrent BuildTorrentFromRssItem(XElement item)
         {
             var torrent = new Torrent();
             torrent.Id = item.Element("{http://xmlns.ezrss.it/0.1/}infoHash") != null ? item.Element("{http://xmlns.ezrss.it/0.1/}infoHash").Value : "";
-            torrent.Title = item.Element("title") != null ? item.Element("title").Value : "";
+            torrent.Release = item.Element("title") != null ? item.Element("title").Value : "";
+            torrent.Title = GuessMovieName(torrent.Release);
             torrent.Description = item.Element("description") != null ? item.Element("description").Value : "";
             torrent.Seeders = item.Element("{http://xmlns.ezrss.it/0.1/}seeds") != null ? int.Parse(item.Element("{http://xmlns.ezrss.it/0.1/}seeds").Value) : 0;
             torrent.Leechers = item.Element("{http://xmlns.ezrss.it/0.1/}peers") != null ? int.Parse(item.Element("{http://xmlns.ezrss.it/0.1/}peers").Value) : 0;

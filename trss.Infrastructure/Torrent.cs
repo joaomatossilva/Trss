@@ -9,6 +9,7 @@ namespace trss.Infrastructure
     {
         public string Id { get; set; }
         public string Title { get; set; }
+        public string Release { get; set; }
         public string Description { get; set; }
         public DateTime PubDate { get; set; }
         public int Seeders { get; set; }

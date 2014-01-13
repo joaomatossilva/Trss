@@ -38,10 +38,12 @@ namespace trss.Controllers
 
         private IEnumerable<TorrentViewModel> ParseTorrents(IEnumerable<Torrent> torrentList)
         {
+            /*
             var selectedTorrents = Session.Load<SelectedTorrent>(torrentList.Select(t => t.Id))
                .Where(t => t != null)
                .ToList();
-
+            */
+            var selectedTorrents = new List<SelectedTorrent>();
             return from t in torrentList
                    join s in selectedTorrents on t.Id equals s.Id into j
                    from j2 in j.DefaultIfEmpty()
