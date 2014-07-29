@@ -1,0 +1,6 @@
+﻿@model Trss.Infrastructure.Movies
+
+@foreach (var item in Model.Results)
+{
+    <a href="@Url.Action("Movie", new { id = item.Id})"><img src="@item.PosterPath" alt="@item.Title" /></a>
+}

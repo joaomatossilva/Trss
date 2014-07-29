@@ -5,49 +5,41 @@ using System.ServiceModel.Syndication;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using trss.Models;
-using trss.Results;
+using Microsoft.AspNet.Identity;
+using Trss.ActionResults;
+using Trss.Models;
 
-namespace trss.Controllers
+namespace Trss.Controllers
 {
     [AllowAnonymous]
-    public class FeedController : RavenDbController
+    public class FeedController : RavenDbBaseController
     {
-        //
-        // GET: /Feed/
-
-        public ActionResult Index()
+        // GET: Feed
+        public ActionResult Index(string user)
         {
-            var items = Session.Query<SelectedTorrent>()
+            var items = Session.Query<DownloadRelease>()
+                .Where(t => t.UserId == user)
                 .OrderByDescending(t => t.Date)
                 .Select(BuildSyndicationItem);
 
             var feed = new SyndicationFeed("Trss Feed", "TTrss Feed", null, items);
-
-            var item = new SyndicationItem("Test Item",
-                                    "This is the content for Test Item",
-                                    new Uri("http://Contoso/ItemOne"),
-                                    "TestItemID",
-                                    DateTime.Now);
-
-            return new RssActionResult() {Feed = feed};
+            return new RssActionResult() { Feed = feed };
         }
 
-        private SyndicationItem BuildSyndicationItem(SelectedTorrent torrent)
+        private SyndicationItem BuildSyndicationItem(DownloadRelease torrent)
         {
-            var item = new SyndicationItem(torrent.Title, torrent.Title,
-                                           new Uri("https://torcache.net/torrent/" + torrent.Id + ".torrent"),
-                                           torrent.Id, torrent.Date);
+            var item = new SyndicationItem(torrent.MovieTitleClean, torrent.MovieTitleClean,
+                                           new Uri("https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent"),
+                                           torrent.TorrentHash, torrent.Date);
             item.ElementExtensions.Add(
                 new XElement("enclosure",
                              new XAttribute("type", "application/x-bittorrent"),
                              new XAttribute("length", "0"),
-                             new XAttribute("url", "https://torcache.net/torrent/" + torrent.Id + ".torrent")
+                             new XAttribute("url", "https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent")
                     ).CreateReader()
                 );
 
             return item;
         } 
-
     }
 }

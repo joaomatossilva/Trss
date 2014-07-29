@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "Releases";
+}
+
+<h1>Releases</h1>
+
+<form class="form-horizontal releases-search">
+    <div class="form-group">
+        <label for="searchTitle" class="col-sm-1 control-label">Keywords</label>
+        <div class="col-sm-11">
+            <input type="text" data-bind="value: searchTitle" name="searchTitle" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-1 control-label">Quality</label>
+        <div class="col-sm-2">
+            <select name="quality" data-bind="options: qualityElements, value: quality" class="form-control"></select>
+        </div>
+        
+        <label for="" class="col-sm-1 control-label">Sort</label>
+        <div class="col-sm-2">
+            <select name="sort" data-bind="options: sortElements, value: sort" class="form-control"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-11">
+            <a class="btn btn-default" data-bind="click: search">Search</a>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-sm-2">
+        <span data-bind="text: TotalItemsFound"> </span> Releases Found
+    </div>
+    <div class="col-sm-offset-6 col-sm-4">
+        <ul class="pagination">
+            <li data-bind="css: {'disabled' : previousDisabled}"><a href="#" data-bind="click: previousClick">&laquo;</a></li>
+            <!-- ko foreach: pages -->
+            <li data-bind="css: {'active' : active}"><a href="#" data-bind="click: $parent.pageClick, text: page"></a></li>
+            <!-- /ko -->
+            <li data-bind="css: {'disabled' : nextDisabled}"><a href="#" data-bind="click: nextClick">&raquo;</a></li>
+        </ul>
+    </div>
+</div>
+
+<section class="movies-list" data-bind="foreach: List">
+    <article class="movie-item">
+        <h3><a data-bind="click: $parent.infoMovie, text: MovieTitleClean"></a></h3>
+        <div class="movie-poster">
+            <img src="#" data-bind="attr: {src: CoverImage}" />
+        </div>
+        <div class="movie-info">
+            <p><span class="movie-info-title">Year</span> <span data-bind="text: MovieYear"></span></p>
+            <p><span class="movie-info-title">Date:</span> <span data-bind="text: formatdate"></span></p>
+            <p><span class="movie-info-title">Quality:</span> <span data-bind="text: Quality"></span></p>
+            <p><span class="movie-info-title">Genre:</span> <span data-bind="text: Genre"></span></p>
+            <p><span class="movie-info-title">Size:</span> <span data-bind="text: Size"></span></p>
+            <p>
+                <a data-bind="click: $parent.downloadRelease, visible: !Downloaded()" class="btn btn-primary btn-xs">
+                    <span class="glyphicon glyphicon-download-alt"></span> Download
+                </a>
+            <p><span data-bind="click: $parent.downloadRelease, visible: Downloaded" class="label label-success"><span class="glyphicon glyphicon-ok"></span> Downloaded</span></p>
+            </p>
+        </div>
+    </article>
+</section>
+
+@section scripts
+{
+    <script type="text/javascript">
+        var mappingOptions = {
+            'List': {
+                create: function(options) {
+                    return (new (function() {
+                        this.formatdate = ko.computed(function() {
+                            var date = new Date(parseInt(this.DateUploaded().substr(6)));
+                            return date.toISOString().slice(0, 10);
+                        }, this);
+                        ko.mapping.fromJS(options.data, {}, this);
+                    })( /* call the ctor here */));
+                }
+            }
+        };
+
+        function ReleasesViewModel() {
+            var self = this;
+
+            self.searchTitle = ko.observable();
+            self.sort = ko.observable();
+            self.sortElements = ko.observableArray(['peers', 'seeds', 'date', 'downloaded']);
+            self.quality = ko.observable();
+            self.qualityElements = ko.observableArray(['720p', '1080p', '3D', 'ALL']);
+            self.TotalItemsFound = ko.observable();
+            self.CurrentPage = ko.observable(1);
+            self.StartPage = ko.observable();
+            self.EndPage = ko.observable();
+            self.List = ko.observableArray();
+
+            self.previousClick = function() {
+                self.CurrentPage(self.CurrentPage() - 1);
+                self.load();
+            };
+            self.previousDisabled = ko.computed(function() {
+                return self.CurrentPage() <= 1;
+            });
+
+            self.nextClick = function () {
+                self.CurrentPage(self.CurrentPage() + 1);
+                self.load();
+            };
+            self.nextDisabled = ko.computed(function () {
+                return self.CurrentPage() >= self.EndPage();
+            });
+
+            self.pages = ko.computed(function() {
+                var pages = [];
+                for (var i = self.StartPage() ; i <= self.EndPage(); i++) {
+                    pages.push({
+                        page: i,
+                        active: i == self.CurrentPage()
+                    });
+                }
+                return pages;
+            });
+
+            self.pageClick = function (item) {
+                self.CurrentPage(item.page);
+                self.load();
+            };
+
+            self.search = function() {
+                self.CurrentPage(1);
+                self.load();
+            }
+
+            self.load = function() {
+                $.ajax({
+                    url: '@Url.Action("GetReleases")',
+                    method: 'GET',
+                    data: {
+                        searchTitle: self.searchTitle(),
+                        page: self.CurrentPage(),
+                        sort: self.sort(),
+                        quality: self.quality()
+                    }
+                }).success(function(data) {
+                    console.log(data);
+                    ko.mapping.fromJS(data, mappingOptions, self);
+                });
+            }
+
+            self.infoMovie = function(item) {
+                var baseurl = '@Url.Action("MovieImdb", "Movies", new {id = "_ID_"})';
+                window.location.href = baseurl.replace("_ID_", item.ImdbCode());
+            }
+
+            self.downloadRelease = function(item) {
+                $.ajax({
+                    url: '@Url.Action("StoreRelease")',
+                    methd: 'POST',
+                    data: item
+                }).success(function(data) {
+                    if (!data.success) {
+                        alert('error');
+                    } else {
+                        item.Downloaded(true);
+                    }
+                }).error(function() {
+                    alert('error on invocation');
+                });
+            }
+
+            self.load();
+        }
+
+        var vm = new ReleasesViewModel();
+        ko.applyBindings(vm);
+    </script>
+}
