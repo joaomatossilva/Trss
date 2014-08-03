@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
 using Trss.Infrastructure;
@@ -41,7 +40,24 @@ namespace Trss.Controllers
                 }, JsonRequestBehavior.AllowGet); 
             }
 
-            var viewmodel = Mapper.Map<IEnumerable<ReleaseViewModel>>(releases.MovieList);
+            //var viewmodel = Mapper.Map<IEnumerable<ReleaseViewModel>>(releases.MovieList);
+            var viewmodel = releases.MovieList.Select(m => new ReleaseViewModel
+                                                           {
+                                                               CoverImage = m.CoverImage,
+                                                               DateUploaded = m.DateUploaded,
+                                                               Genre = m.Genre,
+                                                               ImdbCode = m.ImdbCode,
+                                                               MovieID = m.MovieID,
+                                                               MovieTitleClean = m.MovieTitleClean,
+                                                               MovieYear = m.MovieYear,
+                                                               Quality = m.Quality,
+                                                               ReleaseGroup = m.ReleaseGroup,
+                                                               Size = m.Size,
+                                                               SizeByte = m.SizeByte,
+                                                               TorrentHash = m.TorrentHash,
+                                                               TorrentPeers = m.TorrentPeers,
+                                                               TorrentSeeds = m.TorrentSeeds
+                                                           });
             var selectedReleases = Session.Query<DownloadRelease>("DownloadReleaseByHash")
                 .Search(x => x.TorrentHash, string.Join(" ", viewmodel.Select(v => v.TorrentHash))).ToList();
             var filledViewModel = from t in viewmodel
