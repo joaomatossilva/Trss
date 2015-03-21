@@ -18,6 +18,9 @@
 .movie-item  .movie-poster {
     float: left;
 }
+.movie-poster img {
+    width: 120px;
+}
 .movie-item  .movie-info {
     float: left;
     margin-left: 12px;
