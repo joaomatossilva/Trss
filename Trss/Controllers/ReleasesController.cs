@@ -85,12 +85,40 @@ namespace Trss.Controllers
             return viewModel;
         }
 
-        public async Task<ActionResult> StoreRelease(DownloadRelease newSelectedRelease)
+        private void StoreReleaseInternal(DownloadRelease newSelectedRelease)
         {
             newSelectedRelease.Date = DateTime.Now;
             newSelectedRelease.UserId = User.Identity.GetUserId();
             Session.Store(newSelectedRelease);
+        }
+
+        public async Task<ActionResult> StoreRelease(DownloadRelease newSelectedRelease)
+        {
+            StoreReleaseInternal(newSelectedRelease);
             return Json(new {success = true});
-        } 
+        }
+
+        public ActionResult AddHash()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddHash(DownloadRelease newSelectedRelease)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    StoreReleaseInternal(newSelectedRelease);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            return View(newSelectedRelease);
+        }
     }
 }
