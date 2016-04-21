@@ -18,7 +18,7 @@ namespace Trss.Controllers
 
         public ReleasesController()
         {
-            releasesService = new YiFiReleasesService();
+            releasesService = new TorrentsApiService();
         }
 
         // GET: Releases
