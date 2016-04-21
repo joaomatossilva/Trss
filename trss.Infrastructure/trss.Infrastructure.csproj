@@ -74,6 +74,7 @@
     <Compile Include="Release.cs" />
     <Compile Include="ReleasesResult.cs" />
     <Compile Include="Services\TmdbMoviesService.cs" />
+    <Compile Include="Services\TorrentsApiResponse.cs" />
     <Compile Include="Services\TorrentsApiService.cs" />
     <Compile Include="Services\YiFiReleasesService.cs" />
   </ItemGroup>

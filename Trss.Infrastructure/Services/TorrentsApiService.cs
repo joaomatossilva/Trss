@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Trss.Infrastructure.Services
 {
@@ -49,7 +50,33 @@ namespace Trss.Infrastructure.Services
 
                 var response = await client.GetAsync(queryString);
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsAsync<Releases>();
+                var data = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<TorrentsApiResponse>(data);
+
+                var releases = new Releases
+                {
+                    MovieCount = result.MovieList.Length,
+                    MovieList = result.MovieList.Select(x =>
+                    {
+                        var item = x.Items.First();
+                        var release = new Release
+                        {
+                            CoverImage = x.Poster,
+                            Genre = x.Genres?.FirstOrDefault(),
+                            ImdbCode = x.Imdb,
+                            MovieID = x.Id,
+                            MovieTitleClean = x.Title,
+                            MovieYear = x.Year,
+                            Quality = item.Quality,
+                            SizeByte = item.SizeBytes,
+                            TorrentHash = item.Id,
+                            TorrentPeers = item.TorrentPeers,
+                            TorrentSeeds = item.TorrentSeeds
+                        };
+                        return release;
+                    })
+                };
+                return releases;
             }
         }
     }
