@@ -62,7 +62,7 @@ namespace Trss.Infrastructure.Services
                         var release = new Release
                         {
                             CoverImage = x.Poster,
-                            Genre = x.Genres?.FirstOrDefault(),
+                            Genre = x.Genres != null ? x.Genres.FirstOrDefault() : null,
                             ImdbCode = x.Imdb,
                             MovieID = x.Id,
                             MovieTitleClean = x.Title,
