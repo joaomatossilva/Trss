@@ -58,7 +58,11 @@ namespace Trss.Infrastructure.Services
                     MovieCount = result.MovieList.Length,
                     MovieList = result.MovieList.Select(x =>
                     {
-                        var item = x.Items.First();
+                        var item = x.Items.FirstOrDefault();
+                        if (item == null)
+                        {
+                            return null;
+                        }
                         var release = new Release
                         {
                             CoverImage = x.Poster,
@@ -75,6 +79,7 @@ namespace Trss.Infrastructure.Services
                         };
                         return release;
                     })
+                    .Where(x => x != null)
                 };
                 return releases;
             }
