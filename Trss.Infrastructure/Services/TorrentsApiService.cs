@@ -17,7 +17,7 @@ namespace Trss.Infrastructure.Services
                 client.BaseAddress = new Uri("http://api.torrentsapi.com/list");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                /*
                 var queryString = "?limit=18";
                 if (page > 1)
                 {
@@ -43,6 +43,9 @@ namespace Trss.Infrastructure.Services
                 {
                     queryString += "&keywords=" + Uri.EscapeUriString(searchTitle);
                 }
+                */
+
+                var queryString = "?sort=seeds&quality=720p&page=1";
 
                 var response = await client.GetAsync(queryString);
                 response.EnsureSuccessStatusCode();
