@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Raven.Abstractions.Indexing;
-using Raven.Client.Document;
+using Raven.Client.Documents;
 
 namespace Trss
 {

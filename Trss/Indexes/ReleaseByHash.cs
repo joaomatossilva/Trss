@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Raven.Abstractions.Indexing;
-using Raven.Client.Indexes;
+using Raven.Client.Documents.Indexes;
 using Trss.Infrastructure;
 using Trss.Models;
 
@@ -14,7 +13,7 @@ namespace Trss.Indexes
         public DownloadReleaseByHash()
         {
             Map = releases => from release in releases select new {release.TorrentHash};
-            Index(x => x.TorrentHash, FieldIndexing.Analyzed);
+            Index(x => x.TorrentHash, FieldIndexing.Search);
         }
     }
 }

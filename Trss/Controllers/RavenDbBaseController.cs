@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using System.Web.Mvc;
-using Raven.Client;
-using Raven.Client.Document;
-using Raven.Client.Indexes;
-using Raven.Client.UniqueConstraints;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Indexes;
+using Raven.Client.Documents.Session;
 using Trss.Indexes;
 
 namespace Trss.Controllers
@@ -15,14 +15,18 @@ namespace Trss.Controllers
     {
         private static readonly Lazy<IDocumentStore> LazyDocStore = new Lazy<IDocumentStore>(() =>
         {
+            X509Certificate2 cer = new X509Certificate2(System.IO.File.ReadAllBytes("trss.pfx"));
             var docStore = new DocumentStore
             {
-                ConnectionStringName = "RavenDb",
+                //3.0 connection string - Url = http://localhost:8080;Database=trss
+                Urls = new string[] { "https://a.kappydb.dbs.local.ravendb.net:4443" },
+                Database = "trss",
+                Certificate = cer
                 /*DefaultDatabase = "trss"*/
             };
 
             docStore.Initialize();
-            docStore.RegisterListener(new UniqueConstraintsStoreListener());
+            //docStore.RegisterListener(new UniqueConstraintsStoreListener());
 
             IndexCreation.CreateIndexes(typeof(DownloadReleaseByHash).Assembly, docStore);
 
