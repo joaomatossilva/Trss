@@ -1,0 +1,30 @@
+﻿@model Trss.Infrastructure.Movie
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <h3>Poster</h3>
+            <img src="@Model.PosterPath"/>
+            <h3>Facts</h3>
+            Release Date: <br />
+            @Model.ReleaseDate<br />
+         </div>
+        <div class="span10">
+            <h2>@Model.Title</h2>
+            
+            <h3>Tagline</h3>
+            @Model.Tagline<br />
+            
+            <h3>Overview</h3>
+            @Model.Overview<br />
+            
+            <a href="http://www.imdb.com/title/@Model.ImdbId">Imdb</a>
+        </div>
+    </div>
+</div>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trss.Infrastructure", "Trss
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrssOld", "TrssOld\TrssOld.csproj", "{5C6615A8-7071-4AAB-ADDA-B6F2B2AC9225}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trss", "Trss\Trss.csproj", "{6A8ACDF6-FFC7-469F-9B08-1EB9007FC4E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5C6615A8-7071-4AAB-ADDA-B6F2B2AC9225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C6615A8-7071-4AAB-ADDA-B6F2B2AC9225}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C6615A8-7071-4AAB-ADDA-B6F2B2AC9225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A8ACDF6-FFC7-469F-9B08-1EB9007FC4E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A8ACDF6-FFC7-469F-9B08-1EB9007FC4E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A8ACDF6-FFC7-469F-9B08-1EB9007FC4E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A8ACDF6-FFC7-469F-9B08-1EB9007FC4E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
