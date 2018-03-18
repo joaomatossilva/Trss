@@ -15,7 +15,7 @@ namespace Trss.Infrastructure.Services
         public TmdbMoviesService(TrssSettings settings)
         {
             _client = new TMDbClient(settings.TmdbApiKey);
-            var config = _client.GetConfigAsync().Result; //async on constructure is dangerous
+            var config = _client.Config;
         }
         public async Task<Movies> NowPlaying()
         {

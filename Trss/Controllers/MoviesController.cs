@@ -15,7 +15,7 @@ namespace Trss.Controllers
 
         public MoviesController()
         {
-            moviesService = new TmdbMoviesService();
+            moviesService = new TmdbMoviesService(new TrssSettings{ TmdbApiKey  = "ae7d3ccc0f2719f7e381467f65647d18" });
         }
 
         // GET: Movies

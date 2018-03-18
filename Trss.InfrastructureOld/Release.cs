@@ -1,4 +1,5 @@
 ﻿using System;
+using Raven.Client.UniqueConstraints;
 
 namespace Trss.Infrastructure
 {
@@ -14,6 +15,8 @@ namespace Trss.Infrastructure
         public int TorrentPeers { get; set; }
         public long SizeByte { get; set; }
         public string Size { get; set; }
+
+        [UniqueConstraint]
         public string TorrentHash { get; set; }
         public string CoverImage { get; set; }
         public string Quality { get; set; }
