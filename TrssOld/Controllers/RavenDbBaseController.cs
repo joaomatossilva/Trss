@@ -24,7 +24,7 @@ namespace Trss.Controllers
                 Certificate = cer
                 /*DefaultDatabase = "trss"*/
             };
-
+        
             docStore.Initialize();
             //docStore.RegisterListener(new UniqueConstraintsStoreListener());
 
