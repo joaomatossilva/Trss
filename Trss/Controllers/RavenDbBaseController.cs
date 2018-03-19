@@ -16,12 +16,7 @@ namespace Trss.Controllers
     {
         private static readonly Lazy<IDocumentStore> LazyDocStore = new Lazy<IDocumentStore>(() =>
         {
-            var path = "trss.pfx";
-            if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")))
-            {
-                path = "wwwroot\\" + path;
-            }
-            X509Certificate2 cer = new X509Certificate2(System.IO.File.ReadAllBytes(path));
+            X509Certificate2 cer = new X509Certificate2(System.IO.File.ReadAllBytes("trss.pfx"));
             var docStore = new DocumentStore
             {
                 Urls = new string[] { "https://a.kappydb.dbs.local.ravendb.net:4443" },
