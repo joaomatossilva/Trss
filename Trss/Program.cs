@@ -19,8 +19,10 @@ namespace Trss
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseSetting("detailedErrors", "true")
                 .UseApplicationInsights()
                 .UseStartup<Startup>()
+                .CaptureStartupErrors(true)
                 .Build();
     }
 }
