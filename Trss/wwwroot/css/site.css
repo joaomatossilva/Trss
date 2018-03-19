@@ -3,33 +3,45 @@
     padding-bottom: 20px;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
+/* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+
+.movie-item {
+    width: 350px;
+    height: 250px;
+    display: inline-block;
 }
 
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+    .movie-item .movie-poster {
+        float: left;
     }
+
+.movie-poster img {
+    width: 120px;
+}
+
+.movie-item .movie-info {
+    float: left;
+    margin-left: 12px;
+}
+
+.movie-item .movie-info-title {
+    font-weight: bold;
+}
+
+.movie-item p {
+    margin-bottom: 0;
+}
+
+
+.releases-search {
+    background-color: gainsboro;
+    border: 1px solid #bebebe;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px;
 }
