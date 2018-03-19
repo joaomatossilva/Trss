@@ -5,11 +5,6 @@
     <UserSecretsId>aspnet-Trss-46B5401A-501A-495C-A12F-E5192BFD49B5</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="trss.pem" />
-    <Content Include="trss.pfx" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
