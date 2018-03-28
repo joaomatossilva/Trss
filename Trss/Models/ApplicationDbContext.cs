@@ -17,6 +17,6 @@ namespace Trss.Models
         {
         }
 
-        public IMongoCollection<DownloadRelease> Releases => Database.GetCollection<DownloadRelease>("releases");
+        public IMongoCollection<DownloadRelease> DownloadReleases => Database.GetCollection<DownloadRelease>("downloadReleases");
     }
 }

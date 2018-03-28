@@ -32,7 +32,8 @@ namespace Trss
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mongoDbContext = new MongoDbContext(Configuration["Mongodb:ConnectionString"], Configuration["Mongodb:Database"]);
+            var mongoDbContext = new ApplicationDbContext(Configuration["Mongodb:ConnectionString"], Configuration["Mongodb:Database"]);
+            services.AddSingleton(mongoDbContext);
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddMongoDbStores<IMongoDbContext>(mongoDbContext)
                 .AddDefaultTokenProviders();

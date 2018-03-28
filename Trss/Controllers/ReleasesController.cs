@@ -4,21 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
-using Raven.Client;
-using Raven.Client.Documents;
-using Sparrow;
+using MongoDB.Driver;
 using Trss.Infrastructure;
 using Trss.Infrastructure.Services;
 using Trss.Models;
 
 namespace Trss.Controllers
 {
-    public class ReleasesController : RavenDbBaseController
+    public class ReleasesController : Controller
     {
+        private readonly ApplicationDbContext _dbContext;
         private IReleasesService releasesService;
 
-        public ReleasesController()
+        public ReleasesController(ApplicationDbContext dbContext)
         {
+            _dbContext = dbContext;
             releasesService = new TorrentsApiService();
         }
 
@@ -59,8 +59,12 @@ namespace Trss.Controllers
                                                                TorrentPeers = m.TorrentPeers,
                                                                TorrentSeeds = m.TorrentSeeds
                                                            });
-            var selectedReleases = Session.Query<DownloadRelease>("DownloadReleaseByHash")
-                .Search(x => x.TorrentHash, string.Join(" ", viewmodel.Select(v => v.TorrentHash))).ToList();
+
+            var filterDefinition = new FilterDefinitionBuilder<DownloadRelease>();
+            var filter = filterDefinition.In(x => x.TorrentHash, viewmodel.Select(v => v.TorrentHash));
+            var selectedReleasesQuery = await _dbContext.DownloadReleases.FindAsync(filter);
+            var selectedReleases = await selectedReleasesQuery.ToListAsync();
+
             var filledViewModel = from t in viewmodel
                 join s in selectedReleases on t.TorrentHash equals s.TorrentHash into j
                 from j2 in j.DefaultIfEmpty()
@@ -86,16 +90,16 @@ namespace Trss.Controllers
             return viewModel;
         }
 
-        private void StoreReleaseInternal(DownloadRelease newSelectedRelease)
+        private async Task StoreReleaseInternal(DownloadRelease newSelectedRelease)
         {
             newSelectedRelease.Date = DateTime.Now;
             //newSelectedRelease.UserId = User.Identity.GetUserId();
-            Session.Store(newSelectedRelease);
+            await _dbContext.DownloadReleases.InsertOneAsync(newSelectedRelease);
         }
 
         public async Task<ActionResult> StoreRelease(DownloadRelease newSelectedRelease)
         {
-            StoreReleaseInternal(newSelectedRelease);
+            await StoreReleaseInternal(newSelectedRelease);
             return Json(new {success = true});
         }
 
@@ -111,7 +115,7 @@ namespace Trss.Controllers
             {
                 try
                 {
-                    StoreReleaseInternal(newSelectedRelease);
+                    await StoreReleaseInternal(newSelectedRelease);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)

@@ -9,19 +9,32 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SyndicationFeed;
 using Microsoft.SyndicationFeed.Rss;
+using MongoDB.Driver;
 using Trss.Models;
 
 namespace Trss.Controllers
 {
     [AllowAnonymous]
-    public class FeedController : RavenDbBaseController
+    public class FeedController : Controller
     {
+        private readonly ApplicationDbContext _dbContext;
+
+        public FeedController(ApplicationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         // GET: Feed
         public async Task<ActionResult> Index(string user)
         {
-            var items = Session.Query<DownloadRelease>()
-                .Where(t => t.UserId == user)
-                .OrderByDescending(t => t.Date)
+            var findOptions = new FindOptions<DownloadRelease>
+            {
+                Sort = Builders<DownloadRelease>.Sort.Ascending("Date")
+            };
+            var releases = await _dbContext.DownloadReleases
+                .FindAsync(t => t.UserId == user, findOptions);
+
+            var items = releases.ToEnumerable()
                 .Select(BuildSyndicationItem);
 
             var sw = new StringWriter();
