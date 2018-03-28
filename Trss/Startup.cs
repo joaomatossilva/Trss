@@ -10,10 +10,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Identity;
 using Trss.Controllers;
 using Trss.Models;
 using Trss.Services;
+using MongoDB.Driver;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MongoDbGenericRepository;
 
 namespace Trss
 {
@@ -29,10 +32,10 @@ namespace Trss
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add RavenDB and identity.
-            services
-                .AddRavenDbAsyncSession(RavenDbBaseController.DocumentStore) // Create a RavenDB IAsyncDocumentSession for each request. docStore is your IDocumentStore instance.
-                .AddRavenDbIdentity<ApplicationUser>(); // Use Raven for users and roles. AppUser is your class, a simple DTO to hold user data. See https://github.com/JudahGabriel/RavenDB.Identity/blob/master/Sample/Models/AppUser.cs
+            var mongoDbContext = new MongoDbContext(Configuration["Mongodb:ConnectionString"], Configuration["Mongodb:Database"]);
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddMongoDbStores<IMongoDbContext>(mongoDbContext)
+                .AddDefaultTokenProviders();
 
             services.AddAuthentication().AddGoogle(googleOptions =>
             {
