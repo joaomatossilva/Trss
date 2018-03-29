@@ -13,8 +13,12 @@
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
+[Rr]elease/*
+![Rr]elease/*.cshtml
+[Rr]elease/**
+[Rr]eleases/*
+![Rr]eleases/*.cshtml
+[Rr]eleases/**
 x64/
 x86/
 bld/
@@ -266,5 +270,3 @@ src/.migrations/
 src/.tools/
 package-lock.json
 
-#Micolandia CSS file that is generated on build
-src/Micolandia.Web/Content/css/Site.css
