@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Trss.Infrastructure\Trss.Infrastructure.csproj" />
+    <ProjectReference Include="..\WilderMinds.RssSyndication\WilderMinds.RssSyndication.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{74D30CBB-199
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trss.Infrastructure", "Trss.Infrastructure\Trss.Infrastructure.csproj", "{FB2BFCD1-E967-4553-B8A7-DAA3FD142F92}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WilderMinds.RssSyndication", "WilderMinds.RssSyndication\WilderMinds.RssSyndication.csproj", "{365552EC-E48F-4E15-ACE1-7CE62B6B223A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{FB2BFCD1-E967-4553-B8A7-DAA3FD142F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB2BFCD1-E967-4553-B8A7-DAA3FD142F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB2BFCD1-E967-4553-B8A7-DAA3FD142F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365552EC-E48F-4E15-ACE1-7CE62B6B223A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365552EC-E48F-4E15-ACE1-7CE62B6B223A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365552EC-E48F-4E15-ACE1-7CE62B6B223A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365552EC-E48F-4E15-ACE1-7CE62B6B223A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

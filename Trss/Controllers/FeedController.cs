@@ -11,6 +11,7 @@ using Microsoft.SyndicationFeed;
 using Microsoft.SyndicationFeed.Rss;
 using MongoDB.Driver;
 using Trss.Models;
+using WilderMinds.RssSyndication;
 
 namespace Trss.Controllers
 {
@@ -34,48 +35,33 @@ namespace Trss.Controllers
             var releases = await _dbContext.DownloadReleases
                 .FindAsync(t => t.UserId == user, findOptions);
 
-            var items = releases.ToEnumerable()
-                .Select(BuildSyndicationItem);
-
-            var sw = new StringWriter();
-            using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() {Async = true, Indent = true}))
+            var feed = new Feed
             {
-                var writer = new RssFeedWriter(xmlWriter);
-                await writer.WriteTitle("Trss Feed");
-                await writer.WriteDescription("TTrss Feed");
+                Title = "Trss Feed",
+                Link = new Uri("https://trss.azurewebsites.net/feed"),
+                Description = "TTrss Feed"
+            };
 
-                foreach (var item in items)
-                {
-                    await writer.Write(item);
-                }
-                await writer.Flush();
-            }
-
-            return new ContentResult {Content = sw.ToString(), ContentType = "application/rss+xml"};
+            feed.Items = releases.ToEnumerable().Select(x => BuildItem(x)).ToList();
+            return new ContentResult {Content = feed.Serialize(), ContentType = "application/rss+xml"};
         }
 
-        private SyndicationItem BuildSyndicationItem(DownloadRelease torrent)
+        private Item BuildItem(DownloadRelease torrent)
         {
-            var item = new SyndicationItem()
+            var link = "https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent";
+            var item = new Item
             {
                 Title = torrent.MovieTitleClean,
-                Description = torrent.MovieTitleClean,
-                Id = torrent.TorrentHash,
-                Published = torrent.Date
+                Permalink = torrent.TorrentHash,
+                PublishDate = torrent.Date,
+                Link = new Uri(link)
             };
-            item.AddLink(new SyndicationLink(new Uri("https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent")));
-
-            /*item.
-            
-            item.ElementExtensions.Add(
-                new XElement("enclosure",
-                             new XAttribute("type", "application/x-bittorrent"),
-                             new XAttribute("length", "0"),
-                             new XAttribute("url", "https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent")
-                    ).CreateReader()
-                );
-                */
+            var enclosure = new Enclosure();
+            enclosure.Values["type"] = "application/x-bittorrent";
+            enclosure.Values["length"] = "0";
+            enclosure.Values["url"] = link;
+            item.Enclosures.Add(enclosure);
             return item;
-        } 
+        }
     }
 }
