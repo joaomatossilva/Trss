@@ -9,6 +9,6 @@ namespace Trss.Infrastructure
     public class Releases
     {
         public int MovieCount { get; set; }
-        public IEnumerable<Release> MovieList { get; set; } 
+        public IEnumerable<Release> Movies { get; set; } 
     }
 }

@@ -19,7 +19,7 @@ namespace Trss.Controllers
         public ReleasesController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _releasesService = new TorrentsApiService();//new YiFiReleasesService();
+            _releasesService = new YiFiReleasesService();
         }
 
         // GET: Releases
@@ -42,7 +42,7 @@ namespace Trss.Controllers
             }
 
             //var viewmodel = Mapper.Map<IEnumerable<ReleaseViewModel>>(releases.MovieList);
-            var viewmodel = releases.MovieList.Select(m => new ReleaseViewModel
+            var viewmodel = releases.Movies.Select(m => new ReleaseViewModel
                                                            {
                                                                CoverImage = m.CoverImage,
                                                                DateUploaded = m.DateUploaded,

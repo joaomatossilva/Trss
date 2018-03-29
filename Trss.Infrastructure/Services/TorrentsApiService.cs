@@ -56,7 +56,7 @@ namespace Trss.Infrastructure.Services
                 var releases = new Releases
                 {
                     MovieCount = result.MovieList.Length,
-                    MovieList = result.MovieList.Select(x =>
+                    Movies = result.MovieList.Select(x =>
                     {
                         var item = x.Items.FirstOrDefault();
                         if (item == null)

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Trss.Infrastructure.Services
 {
@@ -14,7 +16,7 @@ namespace Trss.Infrastructure.Services
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://yts.to/api/list.json/");
+                client.BaseAddress = new Uri("https://yts.am/api/v2/list_movies.json");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -46,8 +48,44 @@ namespace Trss.Infrastructure.Services
 
                 var response = await client.GetAsync(queryString);
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsAsync<Releases>();
+                var data = await response.Content.ReadAsStringAsync();
+                var settings = new JsonSerializerSettings()
+                {
+                    ContractResolver = new UnderscorePropertyNamesContractResolver()
+                };
+                var yifiReleases = JsonConvert.DeserializeObject<YiFiResponse>(data, settings);
+                var releases = new Releases
+                {
+                    MovieCount = yifiReleases.Data.MovieCount,
+                    Movies = yifiReleases.Data.Movies.Select(GetRelease)
+                };
+                return releases;
             }
+
+        }
+
+        private Release GetRelease(YiFiRelease yiFiRelease)
+        {
+            var torrent = yiFiRelease.Torrents.First();
+            var release = new Release
+            {
+                Url = torrent.Url,
+                MovieID = torrent.Hash,
+                CoverImage = yiFiRelease.MediumCoverImage,
+                DateUploaded = yiFiRelease.DateUploaded,
+                Genre = yiFiRelease.Genres.FirstOrDefault(),
+                ImdbCode = yiFiRelease.ImdbCode,
+                MovieTitleClean = yiFiRelease.TitleEnglish ?? yiFiRelease.Title,
+                MovieYear = yiFiRelease.Year,
+                Quality = torrent.Quality,
+                ReleaseGroup = "yts",
+                Size = torrent.Size,
+                SizeByte = torrent.SizeBytes,
+                TorrentHash = torrent.Hash,
+                TorrentPeers = torrent.Peers,
+                TorrentSeeds = torrent.Seeds
+            };
+            return release;
         }
     }
 }
