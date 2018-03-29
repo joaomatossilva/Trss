@@ -9,39 +9,3 @@
     padding-right: 15px;
 }
 
-
-.movie-item {
-    width: 350px;
-    height: 250px;
-    display: inline-block;
-}
-
-    .movie-item .movie-poster {
-        float: left;
-    }
-
-.movie-poster img {
-    width: 120px;
-}
-
-.movie-item .movie-info {
-    float: left;
-    margin-left: 12px;
-}
-
-.movie-item .movie-info-title {
-    font-weight: bold;
-}
-
-.movie-item p {
-    margin-bottom: 0;
-}
-
-
-.releases-search {
-    background-color: gainsboro;
-    border: 1px solid #bebebe;
-    -ms-border-radius: 5px;
-    border-radius: 5px;
-    padding: 5px;
-}
