@@ -14,12 +14,12 @@ namespace Trss.Controllers
     public class ReleasesController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
-        private IReleasesService releasesService;
+        private readonly IReleasesService _releasesService;
 
         public ReleasesController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            releasesService = new TorrentsApiService();
+            _releasesService = new TorrentsApiService();//new YiFiReleasesService();
         }
 
         // GET: Releases
@@ -30,7 +30,7 @@ namespace Trss.Controllers
 
         public async Task<ActionResult> GetReleases(string searchTitle, string quality, string sort = null, int page = 1)
         {
-            var releases = await releasesService.GetReleases(searchTitle, quality, sort, page);
+            var releases = await _releasesService.GetReleases(searchTitle, quality, sort, page);
             if (releases.MovieCount == 0)
             {
                 return Json(new ReleasesListViewModel
