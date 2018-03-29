@@ -18,5 +18,6 @@ namespace Trss.Infrastructure
         public string CoverImage { get; set; }
         public string Quality { get; set; }
         public string Genre { get; set; }
+        public string Url { get; set; }
     }
 }

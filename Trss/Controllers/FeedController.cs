@@ -48,7 +48,7 @@ namespace Trss.Controllers
 
         private Item BuildItem(DownloadRelease torrent)
         {
-            var link = "https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent";
+            var link = torrent.Url ?? "https://torcache.net/torrent/" + torrent.TorrentHash + ".torrent";
             var item = new Item
             {
                 Title = torrent.MovieTitleClean,

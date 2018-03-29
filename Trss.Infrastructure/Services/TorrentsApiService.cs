@@ -75,7 +75,8 @@ namespace Trss.Infrastructure.Services
                             SizeByte = item.SizeBytes,
                             TorrentHash = item.Id,
                             TorrentPeers = item.TorrentPeers,
-                            TorrentSeeds = item.TorrentSeeds
+                            TorrentSeeds = item.TorrentSeeds,
+                            Url = item.TorrentUrl
                         };
                         return release;
                     })

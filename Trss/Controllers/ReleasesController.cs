@@ -57,7 +57,8 @@ namespace Trss.Controllers
                                                                SizeByte = m.SizeByte,
                                                                TorrentHash = m.TorrentHash,
                                                                TorrentPeers = m.TorrentPeers,
-                                                               TorrentSeeds = m.TorrentSeeds
+                                                               TorrentSeeds = m.TorrentSeeds,
+                                                               Url = m.Url
                                                            });
 
             var filterDefinition = new FilterDefinitionBuilder<DownloadRelease>();

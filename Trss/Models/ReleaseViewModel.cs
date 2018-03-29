@@ -19,5 +19,6 @@ namespace Trss.Models
         public string Quality { get; set; }
         public string Genre { get; set; }
         public bool Downloaded { get; set; }
+        public string Url { get; set; }
     }
 }
