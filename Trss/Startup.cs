@@ -67,7 +67,9 @@ namespace Trss
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
 
             app.UseStaticFiles();
