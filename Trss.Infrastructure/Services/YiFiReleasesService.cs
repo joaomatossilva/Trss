@@ -29,10 +29,10 @@ namespace Trss.Infrastructure.Services
             var baseAddress = new Uri("https://yts.am/api/v2/list_movies.json");
             
 
-            var queryString = "?limit=18";
+            var queryString = "?limit=24";
             if (page > 1)
             {
-                queryString += "&set=" + page;
+                queryString += "&page=" + page;
             }
             if (!string.IsNullOrEmpty(quality))
             {
@@ -44,15 +44,16 @@ namespace Trss.Infrastructure.Services
             }
             if (!string.IsNullOrEmpty(sort))
             {
-                queryString += "&sort=" + Uri.EscapeUriString(sort);
+                queryString += "&sort_by=" + Uri.EscapeUriString(sort);
             }
             else
             {
-                queryString += "&sort=" + Uri.EscapeUriString("peers");
+                queryString += "&sort_by=" + Uri.EscapeUriString("download_count");
             }
+            queryString += "&order_by=" + Uri.EscapeUriString("desc");
             if (!string.IsNullOrEmpty(searchTitle))
             {
-                queryString += "&keywords=" + Uri.EscapeUriString(searchTitle);
+                queryString += "&query_term=" + Uri.EscapeUriString(searchTitle);
             }
 
             var response = await Client.GetAsync(baseAddress + queryString);
