@@ -9,5 +9,6 @@ namespace Trss.Infrastructure
     public interface IReleasesService
     {
         Task<Releases> GetReleases(string searchTitle, string quality, string sort, int page);
+        Task<Release> GetRelease(string id);
     }
 }

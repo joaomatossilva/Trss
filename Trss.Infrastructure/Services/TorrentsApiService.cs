@@ -85,5 +85,10 @@ namespace Trss.Infrastructure.Services
                 return releases;
             }
         }
+
+        public Task<Release> GetRelease(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

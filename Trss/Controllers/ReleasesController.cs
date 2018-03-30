@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Trss.Identity;
 using Trss.Infrastructure;
 using Trss.Infrastructure.Services;
 using Trss.Models;
@@ -93,14 +94,19 @@ namespace Trss.Controllers
 
         private async Task StoreReleaseInternal(DownloadRelease newSelectedRelease)
         {
-            newSelectedRelease.Date = DateTime.Now;
-            //newSelectedRelease.UserId = User.Identity.GetUserId();
+            newSelectedRelease.Date = DateTime.UtcNow;
+            //need to setup role service to enable the TrrsClaimsPrincipalFactory that set's this claim
+            //newSelectedRelease.UserId = User.GetUserId();
             await _dbContext.DownloadReleases.InsertOneAsync(newSelectedRelease);
         }
 
-        public async Task<ActionResult> StoreRelease(DownloadRelease newSelectedRelease)
+        [HttpPost]
+        public async Task<ActionResult> StoreRelease(string id)
         {
-            await StoreReleaseInternal(newSelectedRelease);
+            var release = await _releasesService.GetRelease(id);
+            var downloadRelease = DownloadRelease.FromRelease(release);
+            downloadRelease.Date = DateTime.UtcNow;
+            await StoreReleaseInternal(downloadRelease);
             return Json(new {success = true});
         }
 

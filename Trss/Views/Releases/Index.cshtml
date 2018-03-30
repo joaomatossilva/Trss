@@ -79,16 +79,17 @@
     <script type="text/javascript">
         var mappingOptions = {
             'list': {
-                create: function (options) {
+                create: function(options) {
                     console.log('create called');
                     return (new (function() {
                         this.formatdate = ko.computed(function() {
-                            var date = new Date(parseInt(this.dateUploaded().substr(6)));
-                            return date.toISOString().slice(0, 10);
-                        }, this);
+                                var date = new Date(parseInt(this.dateUploaded().substr(6)));
+                                return date.toISOString().slice(0, 10);
+                            },
+                            this);
                         ko.mapping.fromJS(options.data, {}, this);
                         console.log(this);
-                    })( /* call the ctor here */));
+                    })(/* call the ctor here */));
                 }
             }
         };
@@ -115,17 +116,17 @@
                 return self.currentPage() <= 1;
             });
 
-            self.nextClick = function () {
+            self.nextClick = function() {
                 self.currentPage(self.currentPage() + 1);
                 self.load();
             };
-            self.nextDisabled = ko.computed(function () {
+            self.nextDisabled = ko.computed(function() {
                 return self.currentPage() >= self.endPage();
             });
 
             self.pages = ko.computed(function() {
                 var pages = [];
-                for (var i = self.startPage() ; i <= self.endPage(); i++) {
+                for (var i = self.startPage(); i <= self.endPage(); i++) {
                     pages.push({
                         page: i,
                         active: i == self.currentPage()
@@ -134,7 +135,7 @@
                 return pages;
             });
 
-            self.pageClick = function (item) {
+            self.pageClick = function(item) {
                 self.currentPage(item.page);
                 self.load();
             };
@@ -169,8 +170,8 @@
             self.downloadRelease = function(item) {
                 $.ajax({
                     url: '@Url.Action("StoreRelease")',
-                    methd: 'POST',
-                    data: item
+                    method: 'POST',
+                    data: { id: item.movieID() }
                 }).success(function(data) {
                     if (!data.success) {
                         alert('error');

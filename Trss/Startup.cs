@@ -17,6 +17,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDbGenericRepository;
+using Trss.Identity;
 
 namespace Trss
 {
@@ -43,6 +44,8 @@ namespace Trss
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
+
+            //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, TrrsClaimsPrincipalFactory>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
