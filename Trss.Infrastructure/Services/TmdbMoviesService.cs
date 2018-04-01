@@ -55,7 +55,7 @@ namespace Trss.Infrastructure.Services
         {
             return new Movie
                    {
-                       Id = movieResult.Id,
+                       MovieId = movieResult.Id,
                        Title = movieResult.Title,
                        OriginalTitle = movieResult.OriginalTitle,
                        ReleaseDate = movieResult.ReleaseDate,
@@ -67,7 +67,7 @@ namespace Trss.Infrastructure.Services
         {
             return new Movie
             {
-                Id = movieResult.Id,
+                MovieId = movieResult.Id,
                 Title = movieResult.Title,
                 OriginalTitle = movieResult.OriginalTitle,
                 ReleaseDate = movieResult.ReleaseDate,

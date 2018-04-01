@@ -1,30 +1,60 @@
-﻿@model Trss.Infrastructure.Movie
+﻿@model MovieViewModel
 
 @{
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Movie.Title;
 }
 
-<h2>@Model.Title</h2>
+<h2>@Model.Movie.Title</h2>
 
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span2">
             <h3>Poster</h3>
-            <img src="@Model.PosterPath"/>
+            <img src="@Model.Movie.PosterPath"/>
             <h3>Facts</h3>
             Release Date: <br />
-            @Model.ReleaseDate<br />
-         </div>
+            @Model.Movie.ReleaseDate<br />
+        </div>
         <div class="span10">
-            <h2>@Model.Title</h2>
+            <h2>@Model.Movie.Title</h2>
             
             <h3>Tagline</h3>
-            @Model.Tagline<br />
+            @Model.Movie.Tagline<br />
             
             <h3>Overview</h3>
-            @Model.Overview<br />
+            @Model.Movie.Overview<br />
             
-            <a href="http://www.imdb.com/title/@Model.ImdbId">Imdb</a>
+            <a href="http://www.imdb.com/title/@Model.Movie.ImdbId">Imdb</a>
+            
+            @if (!Model.IsOnWishlist)
+            {
+                <button class="btn btn-primary add-to-wishlist" data-id="@Model.Movie.MovieId">Add to Wishlist</button>
+            }
+            else
+            {
+                <span class="label label-success">In Wishlist</span>
+            }
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(".add-to-wishlist").click(function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("AddToWishlist")',
+                    method: "POST",
+                    data: {
+                        id: id
+                    }
+                }).success(function() {
+                    location.reload();
+                });
+            });
+        });
+    </script>
+
+}

@@ -4,7 +4,7 @@ namespace Trss.Infrastructure
 {
     public class Movie
     {
-        public int Id { get; set; }
+        public int MovieId { get; set; }
         public string ImdbId { get; set; }
         public string Title { get; set; }
         public string OriginalTitle { get; set; }
