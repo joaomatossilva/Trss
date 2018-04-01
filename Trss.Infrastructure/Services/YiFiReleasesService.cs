@@ -63,7 +63,7 @@ namespace Trss.Infrastructure.Services
             var releases = new Releases
             {
                 MovieCount = yifiReleases.Data.MovieCount,
-                Movies = yifiReleases.Data.Movies.Select(GetRelease)
+                Movies = yifiReleases.Data.Movies?.Select(GetRelease) ?? new Release[] {}
             };
             return releases;
         }

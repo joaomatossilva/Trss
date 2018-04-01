@@ -1,0 +1,92 @@
+﻿@model Trss.Models.WishlistMovie
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>WishlistMovie</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AddedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AddedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastCheck)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastCheck)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FoundDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FoundDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MovieId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ImdbId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ImdbId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OriginalTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OriginalTitle)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tagline)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tagline)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Overview)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Overview)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PosterPath)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PosterPath)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReleaseDate)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
