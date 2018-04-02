@@ -9,13 +9,6 @@
     <Compile Remove="MongoDbSettings.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="trss.pem" />
-    <Content Include="trss.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="1.0.8" />
