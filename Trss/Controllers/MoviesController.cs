@@ -28,6 +28,14 @@ namespace Trss.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Search(string text, int? page)
+        {
+            var results = await _moviesService.Search(text, page);
+            ViewBag.Page = page ?? 0;
+            ViewBag.Text = text;
+            return View(results);
+        }
+
         public async Task<ActionResult> NowPlaying()
         {
             return PartialView("_Movies", await _moviesService.NowPlaying());

@@ -6,43 +6,44 @@
 
 <h2>Movies</h2>
 
-<ul class="tab-selector nav nav-tabs" data-target="subsection" data-loading="subsection-loading">
-    <li data-source="@Url.Action("NowPlaying")"><a href="#" data-toggle="tab">Now Playing</a></li>
-    <li data-source="@Url.Action("TopRated")"><a href="#" data-toggle="tab">Top Rated</a></li>
-</ul>
+<div>
+    <form asp-controller="Movies" asp-action="Search" method="get">
+        <div class="form-group">
+            <label for="searchTitle" class="col-sm-1 control-label">Keywords</label>
+            <div class="col-sm-11">
+                <input type="text" name="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-11">
+                <input type="submit" class="btn btn-default" value="Search" />
+            </div>
+        </div>
+    </form>
+</div>
 
 <div id="subsection-loading">
     <span>Loading ...</span>
 </div>
-<div id="subsection"></div>
+<div id="subsection" data-source="@Url.Action("NowPlaying")"></div>
 
 @section scripts
 {
     <script type="text/javascript">
         $(function () {
-            $(".tab-selector").each(function (index, item) {
-                var $targetElement = $("#" + item.getAttribute("data-target"));
-                var $loadingElement = $("#" + item.getAttribute("data-loading"));
-                $targetElement.hide();
-                $loadingElement.hide();
 
-                $("li", item).click(function () {
-                    $("li", item).removeClass("active");
-                    $(this).addClass("active");
-                    var address = this.getAttribute("data-source");
-                    $targetElement.hide();
-                    $loadingElement.show();
-                    $.ajax({
-                        url: address
-                    }).done(function (data) {
-                        console.log("finished loading " + address);
-                        $targetElement.html(data);
-                        $targetElement.show();
-                        $loadingElement.hide();
-                    });
+            var load = function() {
+                var url = $("#subsection").data("source");
+                $.ajax({
+                    url: url
+                }).done(function (data) {
+                    console.log("finished loading " + url);
+                    $("#subsection").html(data);
+                    $("#subsection-loading").hide();
                 });
-                $("li", item).first().click();
-            });
+            };
+
+            load();
         });
     </script>
 }

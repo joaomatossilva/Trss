@@ -17,6 +17,14 @@ namespace Trss.Infrastructure.Services
             _client = new TMDbClient(settings.TmdbApiKey);
             var config = _client.GetConfigAsync().Result; //async on constructure is dangerous
         }
+
+        public async Task<Movies> Search(string text, int? page = null)
+        {
+            var pageNumber = page ?? 0;
+            var results = await _client.SearchMovieAsync(text, pageNumber);
+            return ToMovies(results);
+        }
+
         public async Task<Movies> NowPlaying()
         {
             var results = await _client.GetMovieNowPlayingListAsync();
@@ -59,6 +67,7 @@ namespace Trss.Infrastructure.Services
                        Title = movieResult.Title,
                        OriginalTitle = movieResult.OriginalTitle,
                        ReleaseDate = movieResult.ReleaseDate,
+                       Overview = movieResult.Overview,
                        PosterPath = _client.Config.Images.BaseUrl + ImageWidthFormat + movieResult.PosterPath
                    };
         }
@@ -72,7 +81,6 @@ namespace Trss.Infrastructure.Services
                 OriginalTitle = movieResult.OriginalTitle,
                 ReleaseDate = movieResult.ReleaseDate,
                 ImdbId = movieResult.ImdbId,
-                Tagline = movieResult.Tagline,
                 Overview = movieResult.Overview,
                 PosterPath = _client.Config.Images.BaseUrl + ImageWidthFormat + movieResult.PosterPath
             };
