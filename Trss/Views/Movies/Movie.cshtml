@@ -34,12 +34,11 @@
             <h3>Releases</h3>
             @if (Model.Release != null)
             {
-                <article class="movie-item">
-                    <div class="movie-info">
-                        <p><span class="movie-info-title">Date:</span> @Model.Release.Date</p>
+
+                        <p><span class="movie-info-title">Date:</span> @Model.Release.DateUploaded</p>
                         <p><span class="movie-info-title">Quality:</span> @Model.Release.Quality</p>
                         <p><span class="movie-info-title">Size:</span> @Model.Release.Size</p>
-                        @if (Model.Downloaded)
+                        if (Model.Downloaded)
                         {
                             <p><span class="label label-success"><span class="glyphicon glyphicon-ok"></span> Downloaded</span></p>
                         }
@@ -52,8 +51,6 @@
                             </p>
                         }
 
-                    </div>
-                </article>
             }
             else
             {

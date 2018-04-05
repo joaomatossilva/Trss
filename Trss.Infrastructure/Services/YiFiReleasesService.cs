@@ -81,7 +81,8 @@ namespace Trss.Infrastructure.Services
 
         private Release GetRelease(YiFiRelease yiFiRelease)
         {
-            var torrent = yiFiRelease.Torrents.First();
+            //prefer the 720p if many, or if there isn't, just get the first
+            var torrent = yiFiRelease.Torrents.FirstOrDefault(x => x.Quality == "720p") ?? yiFiRelease.Torrents.First();
             var release = new Release
             {
                 Url = torrent.Url,
