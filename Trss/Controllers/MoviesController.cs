@@ -15,11 +15,13 @@ namespace Trss.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMoviesService _moviesService;
+        private readonly IReleasesService _releasesService;
 
         public MoviesController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _moviesService = new TmdbMoviesService(new TrssSettings{ TmdbApiKey  = "ae7d3ccc0f2719f7e381467f65647d18" });
+            _releasesService = new YiFiReleasesService();
         }
 
         // GET: Movies
@@ -72,6 +74,19 @@ namespace Trss.Controllers
                 viewModel.IsOnWishlist = true;
                 viewModel.AddedToWishlistDate = wishlistMovie.AddedDate;
                 viewModel.WishlistId = wishlistMovie.Id;
+            }
+
+            var releases = await _releasesService.GetReleases(movie.ImdbId, null, null, 1);
+            var foundRelease = releases?.Movies.FirstOrDefault();
+            if (foundRelease != null)
+            {
+                viewModel.Release = DownloadRelease.FromRelease(foundRelease);
+                var downloadReleasesQuery = _dbContext.DownloadReleases.Find(x => x.TorrentHash == foundRelease.TorrentHash);
+                var downloadRelease = await downloadReleasesQuery.FirstOrDefaultAsync();
+                if (downloadRelease != null)
+                {
+                    viewModel.Downloaded = true;
+                }
             }
 
             return viewModel;

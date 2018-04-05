@@ -7,32 +7,57 @@
 <h2>@Model.Movie.Title</h2>
 
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span2">
-            <h3>Poster</h3>
+    <div class="row">
+        <div class="col-md-2">
             <img src="@Model.Movie.PosterPath"/>
             <h3>Facts</h3>
             Release Date: <br />
             @Model.Movie.ReleaseDate<br />
         </div>
-        <div class="span10">
-            <h2>@Model.Movie.Title</h2>
-            
-            <h3>Tagline</h3>
-            @Model.Movie.Tagline<br />
+        <div class="col-md-10">
+            <a href="http://www.imdb.com/title/@Model.Movie.ImdbId" class="btn btn-default">View on Imdb</a>
             
             <h3>Overview</h3>
-            @Model.Movie.Overview<br />
+            <p>@Model.Movie.Overview</p>
             
-            <a href="http://www.imdb.com/title/@Model.Movie.ImdbId">Imdb</a>
+            <div>
+                @if (!Model.IsOnWishlist)
+                {
+                    <button class="btn btn-primary add-to-wishlist" data-id="@Model.Movie.MovieId">Add to Wishlist</button>
+                }
+                else
+                {
+                    <span class="label label-success">In Wishlist</span>
+                }
+            </div>
             
-            @if (!Model.IsOnWishlist)
+            <h3>Releases</h3>
+            @if (Model.Release != null)
             {
-                <button class="btn btn-primary add-to-wishlist" data-id="@Model.Movie.MovieId">Add to Wishlist</button>
+                <article class="movie-item">
+                    <div class="movie-info">
+                        <p><span class="movie-info-title">Date:</span> @Model.Release.Date</p>
+                        <p><span class="movie-info-title">Quality:</span> @Model.Release.Quality</p>
+                        <p><span class="movie-info-title">Size:</span> @Model.Release.Size</p>
+                        @if (Model.Downloaded)
+                        {
+                            <p><span class="label label-success"><span class="glyphicon glyphicon-ok"></span> Downloaded</span></p>
+                        }
+                        else
+                        {
+                            <p>
+                                <a class="btn btn-primary btn-xs">
+                                    <span class="glyphicon glyphicon-download-alt"></span> Download
+                                </a>
+                            </p>
+                        }
+
+                    </div>
+                </article>
             }
             else
             {
-                <span class="label label-success">In Wishlist</span>
+                <span>There are no releases yet</span>
             }
         </div>
     </div>

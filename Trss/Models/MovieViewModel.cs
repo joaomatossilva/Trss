@@ -12,5 +12,7 @@ namespace Trss.Models
         public bool IsOnWishlist { get; set; }
         public Guid? WishlistId { get; set; }
         public DateTime? AddedToWishlistDate { get; set; }
+        public DownloadRelease Release { get; set; }
+        public bool Downloaded { get; set; }
     }
 }
