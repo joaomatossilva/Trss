@@ -57,7 +57,7 @@ namespace Trss.Controllers
             var updateLastCheckDate = Builders<WishlistMovie>.Update.Set(x => x.LastCheck, topWishlistItem.LastCheck);
             await _dbContext.WishlistMovies.FindOneAndUpdateAsync(filter, updateLastCheckDate);
 
-            var releases = await _releasesService.GetReleases(topWishlistItem.Title, "720p", null, 1);
+            var releases = await _releasesService.GetReleases(topWishlistItem.ImdbId, "720p", null, 1);
             var release = releases?.Movies.FirstOrDefault();
             if (release != null)
             {
