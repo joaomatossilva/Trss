@@ -10,6 +10,7 @@ namespace Trss.Infrastructure.Services
     public class TmdbMoviesService : IMoviesService
     {
         private const string ImageWidthFormat = "w185";
+        private const string CastWidthFormat = "w45";
         private readonly TMDbClient _client;
 
         public TmdbMoviesService(TrssSettings settings)
@@ -39,13 +40,13 @@ namespace Trss.Infrastructure.Services
 
         public async Task<Movie> GetMovie(int id)
         {
-            var result = await _client.GetMovieAsync(id);
+            var result = await _client.GetMovieAsync(id, MovieMethods.Credits | MovieMethods.Videos);
             return ToMovie(result);
         }
 
         public async Task<Movie> GetMovieImdb(string imdbId)
         {
-            var result = await _client.GetMovieAsync(imdbId);
+            var result = await _client.GetMovieAsync(imdbId, MovieMethods.Credits | MovieMethods.Videos);
             return ToMovie(result);
         }
 
@@ -74,7 +75,7 @@ namespace Trss.Infrastructure.Services
 
         private Movie ToMovie(TMDbLib.Objects.Movies.Movie movieResult)
         {
-            return new Movie
+            var movie = new Movie
             {
                 MovieId = movieResult.Id,
                 Title = movieResult.Title,
@@ -82,8 +83,29 @@ namespace Trss.Infrastructure.Services
                 ReleaseDate = movieResult.ReleaseDate,
                 ImdbId = movieResult.ImdbId,
                 Overview = movieResult.Overview,
-                PosterPath = _client.Config.Images.BaseUrl + ImageWidthFormat + movieResult.PosterPath
+                PosterPath = _client.Config.Images.BaseUrl + ImageWidthFormat + movieResult.PosterPath,
             };
+
+            if (movieResult.Credits != null)
+            {
+                movie.Cast = movieResult.Credits.Cast.Select(x => new Movie.CastItem
+                {
+                    Name = $"{x.Name} ({x.Character})",
+                    Thumbnail = _client.Config.Images.BaseUrl + CastWidthFormat + x.ProfilePath
+                }).Take(10).ToArray();
+            }
+
+            if (movieResult.Videos != null)
+            {
+                movie.Videos = movieResult.Videos.Results.Select(x => new Movie.Video
+                {
+                    Title = x.Name,
+                    Address = x.Key,
+                    Type = x.Type
+                }).Take(10).ToArray();
+            }
+
+            return movie;
         }
         
     }

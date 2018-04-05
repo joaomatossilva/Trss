@@ -82,10 +82,11 @@ namespace Trss.Infrastructure.Services
         private Release GetRelease(YiFiRelease yiFiRelease)
         {
             //prefer the 720p if many, or if there isn't, just get the first
-            var torrent = yiFiRelease.Torrents.FirstOrDefault(x => x.Quality == "720p") ?? yiFiRelease.Torrents.First();
+            var torrent = yiFiRelease.Torrents?.FirstOrDefault(x => x.Quality == "720p") ??
+                          yiFiRelease.Torrents?.FirstOrDefault();
             var release = new Release
             {
-                Url = torrent.Url,
+                Url = torrent?.Url,
                 MovieID = yiFiRelease.Id.ToString(),
                 CoverImage = yiFiRelease.MediumCoverImage,
                 DateUploaded = yiFiRelease.DateUploaded,
@@ -93,13 +94,13 @@ namespace Trss.Infrastructure.Services
                 ImdbCode = yiFiRelease.ImdbCode,
                 MovieTitleClean = yiFiRelease.TitleEnglish ?? yiFiRelease.Title,
                 MovieYear = yiFiRelease.Year,
-                Quality = torrent.Quality,
+                Quality = torrent?.Quality,
                 ReleaseGroup = "yts",
-                Size = torrent.Size,
-                SizeByte = torrent.SizeBytes,
-                TorrentHash = torrent.Hash,
-                TorrentPeers = torrent.Peers,
-                TorrentSeeds = torrent.Seeds
+                Size = torrent?.Size,
+                SizeByte = torrent?.SizeBytes ?? 0,
+                TorrentHash = torrent?.Hash,
+                TorrentPeers = torrent?.Peers ?? 0,
+                TorrentSeeds = torrent?.Seeds ?? 0
             };
             return release;
         }

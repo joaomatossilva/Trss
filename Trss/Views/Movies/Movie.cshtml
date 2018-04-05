@@ -9,60 +9,124 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <img src="@Model.Movie.PosterPath"/>
-            <h3>Facts</h3>
-            Release Date: <br />
-            @Model.Movie.ReleaseDate<br />
-        </div>
-        <div class="col-md-10">
-            <a href="http://www.imdb.com/title/@Model.Movie.ImdbId" class="btn btn-default">View on Imdb</a>
-            
-            <h3>Overview</h3>
-            <p>@Model.Movie.Overview</p>
-            
-            <div>
-                @if (!Model.IsOnWishlist)
-                {
-                    <button class="btn btn-primary add-to-wishlist" data-id="@Model.Movie.MovieId">Add to Wishlist</button>
-                }
-                else
-                {
-                    <span class="label label-success">In Wishlist</span>
-                }
-            </div>
-            
+            <img src="@Model.Movie.PosterPath" class="img-responsive" />
             <h3>Releases</h3>
             @if (Model.Release != null)
             {
 
-                        <p><span class="movie-info-title">Date:</span> @Model.Release.DateUploaded</p>
-                        <p><span class="movie-info-title">Quality:</span> @Model.Release.Quality</p>
-                        <p><span class="movie-info-title">Size:</span> @Model.Release.Size</p>
-                        if (Model.Downloaded)
-                        {
-                            <p><span class="label label-success"><span class="glyphicon glyphicon-ok"></span> Downloaded</span></p>
-                        }
-                        else
-                        {
-                            <p>
-                                <a class="btn btn-primary">
-                                    <span class="glyphicon glyphicon-download-alt"></span> Download
-                                </a>
-                            </p>
-                        }
+                <p><span class="movie-info-title">Date:</span> @Model.Release.DateUploaded</p>
+                <p><span class="movie-info-title">Quality:</span> @Model.Release.Quality</p>
+                <p><span class="movie-info-title">Size:</span> @Model.Release.Size</p>
+                if (Model.Downloaded)
+                {
+                    <p><span class="label label-success"><span class="glyphicon glyphicon-ok"></span> Downloaded</span></p>
+                }
+                else
+                {
+                    <p>
+                        <a class="btn btn-primary">
+                            <span class="glyphicon glyphicon-download-alt"></span> Download
+                        </a>
+                    </p>
+                }
 
             }
             else
             {
                 <span>There are no releases yet</span>
+                <div>
+                    @if (!Model.IsOnWishlist)
+                    {
+                        <button class="btn btn-primary add-to-wishlist" data-id="@Model.Movie.MovieId">Add to Wishlist</button>
+                    }
+                    else
+                    {
+                        <span class="label label-success">In Wishlist</span>
+                    }
+                </div>
+
             }
+
+        </div>
+        <div class="col-md-10">
+            
+            Release Date: <br />
+            @Model.Movie.ReleaseDate?.ToShortDateString()<br />
+
+            <a href="http://www.imdb.com/title/@Model.Movie.ImdbId" class="btn btn-default">View on Imdb</a>
+
+            <h3>Overview</h3>
+            <p>@Model.Movie.Overview</p>
+
+
+
+
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <h3>Cast</h3>
+                    @foreach (var cast in Model.Movie.Cast)
+                    {
+                        <div>
+                            <img src="@cast.Thumbnail" /> @cast.Name
+                        </div>
+                    }
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <h3>Videos</h3>
+                    @foreach (var movie in Model.Movie.Videos)
+                    {
+                        <div>
+                            @movie.Type - @movie.Title
+                            <p>
+                                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#videoModal-@movie.Address" data-theVideo="https://www.youtube.com/embed/@movie.Address">
+                                    <img src="https://img.youtube.com/vi/@movie.Address/default.jpg" />
+                                </a>
+                                <div class="modal fade" id="videoModal-@movie.Address" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">@movie.Title</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div>
+                                                    <iframe width="100%" height="500" src=""></iframe>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts
-{
+    {
     <script type="text/javascript">
+
+        //FUNCTION TO GET AND AUTO PLAY YOUTUBE VIDEO FROM DATATAG
+        function autoPlayYouTubeModal(){
+            var trigger = $("body").find('[data-toggle="modal"]');
+            trigger.click(function() {
+                var theModal = $(this).data( "target" ),
+                    videoSRC = $(this).attr( "data-theVideo" ),
+                    videoSRCauto = videoSRC+"?autoplay=1" ;
+                $(theModal+' iframe').attr('src', videoSRCauto);
+                $(theModal+' button.close').click(function () {
+                    $(theModal+' iframe').attr('src', videoSRC);
+                });
+            });
+        }
+
         $(function() {
             $(".add-to-wishlist").click(function () {
                 var id = $(this).data("id");
@@ -76,6 +140,9 @@
                     location.reload();
                 });
             });
+
+            //hook the youtube videos
+            autoPlayYouTubeModal();
         });
     </script>
 

@@ -85,7 +85,7 @@ namespace Trss.Controllers
 
         private ReleaseViewModel UpdateViewModel(ReleaseViewModel viewModel, Release selected)
         {
-            if (selected != null)
+            if (selected != null || string.IsNullOrEmpty(viewModel.TorrentHash))
             {
                 viewModel.Downloaded = true;
             }

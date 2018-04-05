@@ -76,17 +76,24 @@ namespace Trss.Controllers
                 viewModel.WishlistId = wishlistMovie.Id;
             }
 
-            var releases = await _releasesService.GetReleases(movie.ImdbId, null, null, 1);
-            var foundRelease = releases?.Movies.FirstOrDefault();
-            if (foundRelease != null)
+            try
             {
-                viewModel.Release = DownloadRelease.FromRelease(foundRelease);
-                var downloadReleasesQuery = _dbContext.DownloadReleases.Find(x => x.TorrentHash == foundRelease.TorrentHash);
-                var downloadRelease = await downloadReleasesQuery.FirstOrDefaultAsync();
-                if (downloadRelease != null)
+                var releases = await _releasesService.GetReleases(movie.ImdbId, null, null, 1);
+                var foundRelease = releases?.Movies.FirstOrDefault();
+                if (foundRelease != null)
                 {
-                    viewModel.Downloaded = true;
+                    viewModel.Release = DownloadRelease.FromRelease(foundRelease);
+                    var downloadReleasesQuery = _dbContext.DownloadReleases.Find(x => x.TorrentHash == foundRelease.TorrentHash);
+                    var downloadRelease = await downloadReleasesQuery.FirstOrDefaultAsync();
+                    if (downloadRelease != null)
+                    {
+                        viewModel.Downloaded = true;
+                    }
                 }
+            }
+            catch
+            {
+                //soak it
             }
 
             return viewModel;
