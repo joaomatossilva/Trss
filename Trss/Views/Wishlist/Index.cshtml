@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.FoundDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a asp-controller="Movies" asp-action="MovieImdb" asp-route-id="@item.ImdbId">@Html.DisplayFor(modelItem => item.Title)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OriginalTitle)
