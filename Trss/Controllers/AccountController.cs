@@ -289,10 +289,28 @@ namespace Trss.Controllers
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email.EndsWith("acydburne.com.pt"))
+                {
+                    var user = new ApplicationUser { UserName = email, Email = email };
+                    var createResult = await _userManager.CreateAsync(user);
+                    if (createResult.Succeeded)
+                    {
+                        createResult = await _userManager.AddLoginAsync(user, info);
+                        if (createResult.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                            return RedirectToLocal(returnUrl);
+                        }
+                    }
+                }
+                else
+                {
+                    ErrorMessage = "Domain not authorized";
+                    return RedirectToAction(nameof(Login));
+                }
+                
                 return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
             }
         }
