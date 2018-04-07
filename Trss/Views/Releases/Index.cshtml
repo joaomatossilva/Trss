@@ -53,7 +53,7 @@
 
 <section class="movies-list" data-bind="foreach: list">
     <article class="movie-item">
-        <h3><a href="#" data-bind="click: $parent.infoMovie, text: movieTitleClean"></a></h3>
+        <h3><a href="#" data-bind="attr: {'href': $parent.infoMovie($context)}, text: movieTitleClean"></a></h3>
         <div class="movie-poster">
             <img src="#" data-bind="attr: {src: coverImage}" />
         </div>
@@ -162,9 +162,10 @@
                 });
             }
 
-            self.infoMovie = function(item) {
+            self.infoMovie = function (item) {
+                console.log(item);
                 var baseurl = '@Url.Action("MovieImdb", "Movies", new {id = "_ID_"})';
-                window.location.href = baseurl.replace("_ID_", item.imdbCode());
+                return baseurl.replace("_ID_", item.$data.imdbCode());
             }
 
             self.downloadRelease = function(item) {
