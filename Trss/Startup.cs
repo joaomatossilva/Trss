@@ -21,6 +21,9 @@ using Trss.Identity;
 
 namespace Trss
 {
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -45,6 +48,13 @@ namespace Trss
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, TrrsClaimsPrincipalFactory>();
 
             // Add application services.
@@ -56,24 +66,14 @@ namespace Trss
                     .RequireAuthenticatedUser()
                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-            });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                //app.UseExceptionHandler("/Home/Error");
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
+            app.UseDeveloperExceptionPage();
+            app.UseDatabaseErrorPage();
 
             app.UseStaticFiles();
 

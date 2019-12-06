@@ -14,15 +14,14 @@ namespace Trss
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            BuildWebHost(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseSetting("detailedErrors", "true")
                 .UseApplicationInsights()
                 .UseStartup<Startup>()
-                .CaptureStartupErrors(true)
-                .Build();
+                .CaptureStartupErrors(true);
     }
 }
